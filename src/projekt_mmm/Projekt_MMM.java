@@ -51,7 +51,7 @@ public class Projekt_MMM extends Okno {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        
         Projekt_MMM projekt = new Projekt_MMM();
         Okno okno = new Okno();
         okno.setVisible(true);
@@ -131,7 +131,8 @@ public class Projekt_MMM extends Okno {
                 h1[i] = h1[i-1] + (T * (u[i]/S1 - A1/S1*sqrt(2*g*h1[i-1])));
                 time[i] = time[i-1]+T;
                 if (h1[i] < 0) h1[i] = 0;
-                //System.out.print(h[i]);
+                if (h1[i] > H1 ) h1[i] = H1;
+                
             }
 
             h2 = new double[liczba_krokow+1 ];
@@ -140,7 +141,8 @@ public class Projekt_MMM extends Okno {
                 h2[i] = h2[i-1] + (T * (A1/S1*sqrt(2*g*h1[i-1])/S1 - A2/S2*sqrt(2*g*h2[i-1])));
                 time[i] = time[i-1]+T;
                 if (h2[i] < 0) h2[i] = 0;
-                //System.out.print(h[i]);
+                if (h2[i] > H2 ) h2[i] = H2;
+                
             }
             
         }

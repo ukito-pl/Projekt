@@ -90,6 +90,7 @@ public class Okno extends javax.swing.JFrame {
      }
      
     public void utworz_wykres(String nazwa, String nazwa_x, String nazwa_y, double[] x, double[] y, javax.swing.JPanel panel){
+        
         JFreeChart xylineChart = ChartFactory.createXYLineChart(
         nazwa ,
         nazwa_x,
@@ -97,13 +98,19 @@ public class Okno extends javax.swing.JFrame {
         createDataset(x, y) ,
         PlotOrientation.VERTICAL ,
         false , false , false);
-         
+        
+        Color kolor = new Color(240,240,240);
+        xylineChart.setBackgroundPaint(kolor);
+        
         ChartPanel chartPanel = new ChartPanel( xylineChart );
+        
         final XYPlot plot = xylineChart.getXYPlot( );
+        
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer( );
         renderer.setSeriesPaint( 0 , Color.YELLOW );
-        renderer.setSeriesStroke( 0 , new BasicStroke( 3.0f ) );
+        renderer.setSeriesStroke( 0 , new BasicStroke( 2.0f ) );
         renderer.setSeriesShapesVisible(0, jCheckBox1.isSelected());
+        
         plot.setRenderer( renderer ); 
         pack();
         panel.removeAll();
@@ -168,10 +175,8 @@ public class Okno extends javax.swing.JFrame {
             }
         });
 
-        jPanel2.setBackground(new java.awt.Color(102, 255, 255));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 102, 102));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         jLabel1.setText("Parametry zbiorników");
@@ -401,9 +406,9 @@ public class Okno extends javax.swing.JFrame {
                                 .addComponent(jLabel2)))))
                 .addGap(53, 53, 53)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(26, 26, 26))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         pack();
