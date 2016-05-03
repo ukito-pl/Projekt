@@ -12,13 +12,11 @@ package projekt_mmm;
 import java.awt.Color; 
 import java.awt.BasicStroke; 
 import java.awt.BorderLayout;
-import java.util.Arrays;
 import org.jfree.chart.ChartPanel; 
 import org.jfree.chart.JFreeChart; 
 import org.jfree.data.xy.XYDataset; 
 import org.jfree.data.xy.XYSeries; 
-import org.jfree.ui.ApplicationFrame; 
-import org.jfree.ui.RefineryUtilities; 
+
 import org.jfree.chart.plot.XYPlot; 
 import org.jfree.chart.ChartFactory; 
 import org.jfree.chart.plot.PlotOrientation; 
@@ -30,6 +28,8 @@ public class Okno extends javax.swing.JFrame {
     public double[] y1;
     public double[] x2;
     public double[] y2;
+    public double[] x3;
+    public double[] y3;
     public double A1;
     public double A2;
     public double S1;
@@ -42,7 +42,7 @@ public class Okno extends javax.swing.JFrame {
     public double AP; // amplituda pobudzenia
     public double TP; // okres pobudzenia
     public int RM; //rodzaj metody rozwiązywania równania różniczkowego
-   
+    public boolean PP;// czy pokazać pobudzenie
     
     
     /**
@@ -62,42 +62,55 @@ public class Okno extends javax.swing.JFrame {
         AP = odbierz_wartosc(input_AP);
         TP = odbierz_wartosc(input_TP);
         RM = input_RM.getSelectedIndex();
+        PP = input_PP.isSelected();
     }
 
     
-     private XYDataset createDataset( double[] x, double[] y)
+     private XYDataset createDataset( double[] x, double[] y, boolean pobudzenie)
    {        
-      final XYSeries h1 = new XYSeries( "h1" );          
+      final XYSeries h = new XYSeries( "h" );          
       for( int i = 0 ; i < x.length & i < y.length; i++){
-          h1.add( x[i] , y[i] );
-      }         
+          h.add( x[i] , y[i] );
+      }
+
       final XYSeriesCollection dataset = new XYSeriesCollection( );                   
-      dataset.addSeries( h1 );
+      dataset.addSeries( h );
+      
+      if(PP & pobudzenie){
+        final XYSeries u = new XYSeries( "u" );          
+        for( int i = 0 ; i < x3.length & i < y3.length; i++){
+            u.add( x3[i] , y3[i] );
+        }
+        dataset.addSeries(u);
+      }
+      
       return dataset;
    }
-     public void przeslij_dane(double[] otrzymane_x1, double[] otrzymane_y1,double[] otrzymane_x2, double[] otrzymane_y2){
+     public void przeslij_dane(double[] otrzymane_x1, double[] otrzymane_y1,double[] otrzymane_x2, double[] otrzymane_y2,double[] otrzymane_x3, double[] otrzymane_y3){
          x1 = otrzymane_x1;
          y1 = otrzymane_y1;
          x2 = otrzymane_x2;
          y2 = otrzymane_y2;
+         x3 = otrzymane_x3;
+         y3 = otrzymane_y3;
      }
      
      private double odbierz_wartosc( javax.swing.JTextField zmienna_odebrana){
         double zmienna = 0.0;
         String str = zmienna_odebrana.getText();
         if (!str.isEmpty()){
-        zmienna = Double.parseDouble(zmienna_odebrana.getText()) ;
+            zmienna = Double.parseDouble(zmienna_odebrana.getText()) ;
         }
         return zmienna;
      }
      
-    public void utworz_wykres(String nazwa, String nazwa_x, String nazwa_y, double[] x, double[] y, javax.swing.JPanel panel){
+    public void utworz_wykres(String nazwa, String nazwa_x, String nazwa_y, double[] x, double[] y, javax.swing.JPanel panel, boolean pobudzenie){
         
         JFreeChart xylineChart = ChartFactory.createXYLineChart(
         nazwa ,
         nazwa_x,
         nazwa_y ,
-        createDataset(x, y) ,
+        createDataset(x, y, pobudzenie) ,
         PlotOrientation.VERTICAL ,
         false , false , false);
         
@@ -112,6 +125,10 @@ public class Okno extends javax.swing.JFrame {
         renderer.setSeriesPaint( 0 , Color.YELLOW );
         renderer.setSeriesStroke( 0 , new BasicStroke( 2.0f ) );
         renderer.setSeriesShapesVisible(0, jCheckBox1.isSelected());
+        
+        renderer.setSeriesPaint( 1 , Color.CYAN );
+        renderer.setSeriesStroke( 1 , new BasicStroke( 2.0f ) );
+        renderer.setSeriesShapesVisible(1, jCheckBox1.isSelected());
         
         plot.setRenderer( renderer ); 
         pack();
@@ -162,6 +179,8 @@ public class Okno extends javax.swing.JFrame {
         input_TP = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         input_RM = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
+        input_PP = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -292,6 +311,14 @@ public class Okno extends javax.swing.JFrame {
             }
         });
 
+        jLabel17.setText("Pokaż pobudzenie");
+
+        input_PP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                input_PPActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -355,21 +382,26 @@ public class Okno extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(input_RM, 0, 168, Short.MAX_VALUE)))
                                 .addGap(66, 66, 66)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel14)
-                                            .addComponent(jLabel15))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(input_TP, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-                                            .addComponent(input_AP)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel14)
+                                                .addComponent(jLabel15))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(input_TP, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+                                                .addComponent(input_AP)))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel13)
+                                            .addGap(18, 18, 18)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel12)
+                                                .addComponent(input_RP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel13)
+                                        .addComponent(jLabel17)
                                         .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel12)
-                                            .addComponent(input_RP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(input_PP))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(143, 143, 143)
@@ -424,14 +456,19 @@ public class Okno extends javax.swing.JFrame {
                                 .addComponent(input_S1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(input_RM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16))
-                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(input_RM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel16))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(jLabel17))
+                    .addComponent(input_PP))
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
@@ -439,10 +476,10 @@ public class Okno extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         if (x1 != null & y1 != null){
-        utworz_wykres("Wysokość wody w pierwszym zbiorniku", "Czas[s]", "Wysokość[m]", x1, y1,jPanel1);
+        utworz_wykres("Wysokość wody w pierwszym zbiorniku", "Czas[s]", "Wysokość[m]", x1, y1,jPanel1, true);
         }
         if (x2 != null & y2 != null){
-        utworz_wykres("Wysokość wody w drugim zbiorniku", "Czas[s]", "Wysokość[m]", x2, y2,jPanel2);
+        utworz_wykres("Wysokość wody w drugim zbiorniku", "Czas[s]", "Wysokość[m]", x2, y2,jPanel2, false);
         }
     }//GEN-LAST:event_jButton1MouseClicked
     
@@ -496,6 +533,10 @@ public class Okno extends javax.swing.JFrame {
         RM = input_RM.getSelectedIndex();
     }//GEN-LAST:event_input_RMActionPerformed
 
+    private void input_PPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_input_PPActionPerformed
+        PP = input_PP.isSelected();
+    }//GEN-LAST:event_input_PPActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -538,6 +579,7 @@ public class Okno extends javax.swing.JFrame {
     private javax.swing.JTextField input_AP;
     private javax.swing.JTextField input_H1;
     private javax.swing.JTextField input_H2;
+    private javax.swing.JCheckBox input_PP;
     private javax.swing.JComboBox<String> input_RM;
     private javax.swing.JComboBox<String> input_RP;
     private javax.swing.JTextField input_S1;
@@ -555,6 +597,7 @@ public class Okno extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
