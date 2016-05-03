@@ -41,6 +41,7 @@ public class Okno extends javax.swing.JFrame {
     public int RP; //rodzaj pobudzenia
     public double AP; // amplituda pobudzenia
     public double TP; // okres pobudzenia
+    public int RM; //rodzaj metody rozwiązywania równania różniczkowego
    
     
     
@@ -60,13 +61,14 @@ public class Okno extends javax.swing.JFrame {
         RP = input_RP.getSelectedIndex();
         AP = odbierz_wartosc(input_AP);
         TP = odbierz_wartosc(input_TP);
+        RM = input_RM.getSelectedIndex();
     }
 
     
      private XYDataset createDataset( double[] x, double[] y)
    {        
       final XYSeries h1 = new XYSeries( "h1" );          
-      for( int i = 0 ; i < x.length || i < y.length; i++){
+      for( int i = 0 ; i < x.length & i < y.length; i++){
           h1.add( x[i] , y[i] );
       }         
       final XYSeriesCollection dataset = new XYSeriesCollection( );                   
@@ -158,6 +160,8 @@ public class Okno extends javax.swing.JFrame {
         input_AP = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         input_TP = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        input_RM = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -241,7 +245,7 @@ public class Okno extends javax.swing.JFrame {
             }
         });
 
-        input_T.setText("0.05");
+        input_T.setText("1");
         input_T.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 input_TKeyReleased(evt);
@@ -276,6 +280,15 @@ public class Okno extends javax.swing.JFrame {
         input_TP.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 input_TPKeyReleased(evt);
+            }
+        });
+
+        jLabel16.setText("Metoda");
+
+        input_RM.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Metoda Eulera", "Metoda punktu środkowego", " " }));
+        input_RM.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                input_RMActionPerformed(evt);
             }
         });
 
@@ -326,15 +339,21 @@ public class Okno extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                             .addComponent(input_A2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(71, 71, 71)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel11))
-                                .addGap(24, 24, 24)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jCheckBox1)
-                                    .addComponent(input_T, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                                    .addComponent(input_t))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel9)
+                                            .addComponent(jLabel10)
+                                            .addComponent(jLabel11))
+                                        .addGap(24, 24, 24)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jCheckBox1)
+                                            .addComponent(input_T, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                                            .addComponent(input_t)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel16)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(input_RM, 0, 168, Short.MAX_VALUE)))
                                 .addGap(66, 66, 66)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -404,11 +423,15 @@ public class Okno extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(input_S1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2)))))
-                .addGap(53, 53, 53)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(input_RM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -469,6 +492,10 @@ public class Okno extends javax.swing.JFrame {
         TP = odbierz_wartosc(input_TP);
     }//GEN-LAST:event_input_TPKeyReleased
 
+    private void input_RMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_input_RMActionPerformed
+        RM = input_RM.getSelectedIndex();
+    }//GEN-LAST:event_input_RMActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -511,6 +538,7 @@ public class Okno extends javax.swing.JFrame {
     private javax.swing.JTextField input_AP;
     private javax.swing.JTextField input_H1;
     private javax.swing.JTextField input_H2;
+    private javax.swing.JComboBox<String> input_RM;
     private javax.swing.JComboBox<String> input_RP;
     private javax.swing.JTextField input_S1;
     private javax.swing.JTextField input_S2;
@@ -526,6 +554,7 @@ public class Okno extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
