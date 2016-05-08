@@ -111,23 +111,24 @@ public class Projekt_MMM extends Okno {
             }
             
             switch(rodzaj_metody){
-                case 0:     metoda_Eulera(A1, A2, S1, S2, H1, H2, t, T, rodzaj_pob, amplituda_pob, okres_pob, liczba_krokow);
+                case 0:     metoda_prostokatow(A1, A2, S1, S2, H1, H2, t, T, rodzaj_pob, amplituda_pob, okres_pob, liczba_krokow);
                             break;
-                case 1:     metoda_Midpoint(A1, A2, S1, S2, H1, H2, t, T, rodzaj_pob, amplituda_pob, okres_pob, liczba_krokow);
+                case 1:     metoda_trapezow(A1, A2, S1, S2, H1, H2, t, T, rodzaj_pob, amplituda_pob, okres_pob, liczba_krokow);
                             break;
+                
             }
             
         }
     }
     
-    public void metoda_Eulera(double A1, double A2, double S1, double S2, double H1, double H2, double t, double T,int rodzaj_pob, double amplituda_pob, double okres_pob, int liczba_krokow){
-        //kolejne wartości obliczane są ze wzoru: y(t+h)=y(t) + h*f(t,y(t))
+    public void metoda_prostokatow(double A1, double A2, double S1, double S2, double H1, double H2, double t, double T,int rodzaj_pob, double amplituda_pob, double okres_pob, int liczba_krokow){
+        
         h1 = new double[liczba_krokow+1];
         h1[0]=0;
         time = new double[ liczba_krokow+1 ];
         time[0]=0; 
         for (int i=0; i < liczba_krokow; i++ ){
-            double u = pobudzenie(rodzaj_pob,amplituda_pob,okres_pob,t,T, i);
+            double u = pobudzenie(rodzaj_pob,amplituda_pob,okres_pob,t,T, i+1);
             h1[i+1] = h1[i] + (T * (u/S1 - A1/S1*sqrt(2*g*h1[i])));
             time[i+1] = time[i]+T;
             if (h1[i+1] < 0) h1[i+1] = 0;
@@ -138,7 +139,7 @@ public class Projekt_MMM extends Okno {
         h2 = new double[liczba_krokow+1 ];
         h2[0]=0;
         for (int i=0; i < liczba_krokow; i++ ){
-            h2[i+1] = h2[i] + (T * (A1/S1*sqrt(2*g*h1[i])/S1 - A2/S2*sqrt(2*g*h2[i])));
+            h2[i+1] = h2[i] + (T * (A1/S1*sqrt(2*g*h1[i+1])/S2 - A2/S2*sqrt(2*g*h2[i])));
             time[i+1] = time[i]+T;
             if (h2[i+1] < 0) h2[i+1] = 0;
             if (h2[i+1] > H2 ) h2[i+1] = H2;
@@ -146,16 +147,15 @@ public class Projekt_MMM extends Okno {
         }
     }
     
-     public void metoda_Midpoint(double A1, double A2, double S1, double S2, double H1, double H2, double t, double T,int rodzaj_pob, double amplituda_pob, double okres_pob, int liczba_krokow){
+     public void metoda_trapezow(double A1, double A2, double S1, double S2, double H1, double H2, double t, double T,int rodzaj_pob, double amplituda_pob, double okres_pob, int liczba_krokow){
         h1 = new double[liczba_krokow+1];
         h1[0]=0;
         time = new double[ liczba_krokow+1 ];
         time[0]=0; 
         for (int i=0; i < liczba_krokow; i++ ){
             double u1 = pobudzenie(rodzaj_pob,amplituda_pob,okres_pob,t,T, i);
-            double k1 = T * (u1/S1 - A1/S1*sqrt(2*g*h1[i]));
-            double u2 = pobudzenie(rodzaj_pob,amplituda_pob,okres_pob,t,T, i+0.5);
-            h1[i+1] = h1[i] + (T * (u2/S1 - A1/S1*sqrt(2*g*(h1[i]+(1/2)*k1))));
+            double u2 = pobudzenie(rodzaj_pob,amplituda_pob,okres_pob,t,T, i+1);
+            h1[i+1] = h1[i] + (T/2 * (u1/S1 - A1/S1*sqrt(2*g*h1[i]) + u2/S1 - A1/S1*sqrt(2*g*h1[i])));
             time[i+1] = time[i]+T;
             if (h1[i+1] < 0) h1[i+1] = 0;
             if (h1[i+1] > H1 ) h1[i+1] = H1;
@@ -164,8 +164,8 @@ public class Projekt_MMM extends Okno {
         h2 = new double[liczba_krokow+1 ];
         h2[0]=0;
         for (int i=0; i < liczba_krokow; i++ ){
-            double k1 = T * (A1/S1*sqrt(2*g*h1[i])/S1 - A2/S2*sqrt(2*g*h2[i]));
-            h2[i+1] = h2[i] + (T * (A1/S1*sqrt(2*g*(h1[i] + (1/2)*k1))/S1 - A2/S2*sqrt(2*g*(h2[i]+(1/2)*k1))));
+           
+            h2[i+1] = h2[i] + (T/2 * (A1/S1*sqrt(2*g*h1[i])/S2 - A2/S2*sqrt(2*g*(h2[i])) + A1/S1*sqrt(2*g*h1[i+1])/S2 - A2/S2*sqrt(2*g*(h2[i]))));
             time[i+1] = time[i]+T;
             if (h2[i+1] < 0) h2[i+1] = 0;
             if (h2[i+1] > H2 ) h2[i+1] = H2;
@@ -173,5 +173,7 @@ public class Projekt_MMM extends Okno {
         }
         
      }
+     
+     
     
 }

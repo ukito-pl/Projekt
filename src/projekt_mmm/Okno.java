@@ -304,7 +304,7 @@ public class Okno extends javax.swing.JFrame {
 
         jLabel16.setText("Metoda");
 
-        input_RM.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Metoda Eulera", "Metoda punktu środkowego", " " }));
+        input_RM.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Metoda prostokątów", "Metoda trapezów", "l", " " }));
         input_RM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 input_RMActionPerformed(evt);

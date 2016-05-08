@@ -420,10 +420,11 @@
     <Component class="javax.swing.JComboBox" name="input_RM">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="Metoda Eulera"/>
-            <StringItem index="1" value="Metoda punktu &#x15b;rodkowego"/>
-            <StringItem index="2" value=" "/>
+          <StringArray count="4">
+            <StringItem index="0" value="Metoda prostok&#x105;t&#xf3;w"/>
+            <StringItem index="1" value="Metoda trapez&#xf3;w"/>
+            <StringItem index="2" value="l"/>
+            <StringItem index="3" value=" "/>
           </StringArray>
         </Property>
       </Properties>
