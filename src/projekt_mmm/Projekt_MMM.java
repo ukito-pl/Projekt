@@ -66,9 +66,9 @@ public class Projekt_MMM extends Okno {
         switch(rodzaj){
             case 0: pobudzenie = prostokat(amplituda,okres, t, T,i);
                     break;
-            case 1: pobudzenie = trojkat(amplituda,okres, t, T);
+            case 1: pobudzenie = trojkat(amplituda,okres, t, T, i);
                     break;
-            case 2: pobudzenie = sinusoida(amplituda,okres, t, T);
+            case 2: pobudzenie = sinusoida(amplituda,okres, t, T, i);
                     break;
         }
         
@@ -88,25 +88,29 @@ public class Projekt_MMM extends Okno {
         return p;
     }
     
-    public double trojkat(double amplituda, double okres, double t, double T){
-        double tr = 0;
+    public double trojkat(double amplituda, double okres, double t, double T, double i){
+        double tr ;
+       
+        int cykl = (int) (i/(okres/T) );
+        if(i <= ((okres/(2*T)) + (cykl)*(okres/(T))) & i >= cykl*(okres/T))
+        tr=((amplituda*2*(i*T-cykl*okres))/okres); 
+        else 
+        tr=(amplituda*2-((amplituda*2*(i*T-cykl*okres))/okres));
         
-        //Do wypełnienia
         return tr;
     }
     
-    public double sinusoida(double amplituda, double okres, double t, double T){
-        double s = 0;
-        
-        //Do wypełnienia
+    public double sinusoida(double amplituda, double okres, double t, double T, double i){
+        double s ;
+        s =amplituda*sin(2*PI * i * T /okres)+amplituda;
         return s;
     }
     
     public void calkowanie(double A1, double A2, double S1, double S2, double H1, double H2, double t, double T, int rodzaj_pob, double amplituda_pob, double okres_pob, int rodzaj_metody){
         if (sprawdzenie(A1,A2,S1,S2,H1,H2,t,T)){
             int liczba_krokow = (int)(t/T);
-            u = new double[liczba_krokow +1];
-            for (int i=0; i < liczba_krokow; i++ ){
+            u = new double[liczba_krokow+1 ];
+            for (int i=0; i <= liczba_krokow; i++ ){
                 u[i] = pobudzenie(rodzaj_pob,amplituda_pob,okres_pob,t,T, i);
             }
             
